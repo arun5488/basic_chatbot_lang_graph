@@ -32,7 +32,16 @@ class LoadStreamlitUI:
                 self.user_controls["selected_groq_model"]= st.selectbox("Select Model", model_options)
                 logger.info(f"selected_groq_model:{self.user_controls["selected_groq_model"]}")
             
+            
+            elif self.user_controls["selected_llm"] == "OpenAI":
+                logger.info(f"llm_option selected is OpenAI")
+                model_options = self.config.get_openai_model_options()
+                logger.info(f"model_options:{model_options}")
+                self.user_controls["selected_openai_model"]=st.selectbox("Select Model", model_options)
+                logger.info(f"selected openai model:{self.user_controls["selected_openai_model"]}")
+            
             # usecase selection
             self.user_controls["selected_usecase"]=st.selectbox("Select usecase",usecase_options)
+
 
             return self.user_controls

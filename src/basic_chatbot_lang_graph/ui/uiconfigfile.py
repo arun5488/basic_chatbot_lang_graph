@@ -27,6 +27,6 @@ class Config:
     
     def get_openai_model_options(self):
         logger.info("inside get_openai_model_options method")
-        return const.GROQ_MODEL_OPTIONS
+        return const.OPENAI_MODEL_OPTIONS
 
 
