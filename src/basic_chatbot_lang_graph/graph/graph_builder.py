@@ -1,5 +1,5 @@
 from langgraph.graph import StateGraph, START, END
-from basic_chatbot_lang_graph.nodes.basic_chatbot_node import BasicChatbotNode
+from src.basic_chatbot_lang_graph.nodes.basic_chatbot_node import BasicChatbotNode
 from src.basic_chatbot_lang_graph.state.state import State
 from src.basic_chatbot_lang_graph import logger
 
