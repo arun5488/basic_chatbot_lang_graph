@@ -42,6 +42,7 @@ class LoadStreamlitUI:
             
             # usecase selection
             self.user_controls["selected_usecase"]=st.selectbox("Select usecase",usecase_options)
+            
 
 
             return self.user_controls

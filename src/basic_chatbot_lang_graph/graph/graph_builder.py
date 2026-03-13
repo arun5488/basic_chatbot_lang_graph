@@ -2,6 +2,9 @@ from langgraph.graph import StateGraph, START, END
 from src.basic_chatbot_lang_graph.nodes.basic_chatbot_node import BasicChatbotNode
 from src.basic_chatbot_lang_graph.state.state import State
 from src.basic_chatbot_lang_graph import logger
+from src.basic_chatbot_lang_graph.tools.search_tool import create_tool_node, get_tools
+from src.basic_chatbot_lang_graph.nodes.chatbot_with_tool import ChatbotWithToolNode
+from langgraph.prebuilt import tools_condition, ToolNode
 
 class GraphBuilder:
     def __init__(self, model) -> None:
@@ -23,6 +26,29 @@ class GraphBuilder:
         self.graph_builder.add_edge(START, "chatbot")
         self.graph_builder.add_edge("chatbot", END)
     
+    def chatbot_with_websearch_build_graph(self):
+        logger.info("inside chatbot_with_websearch method")
+        """
+        Builds a chat bot using langgraph with tools integration.
+        the tool node will initialize the tool capabilities in the chatbot and sets up
+        conditional and direct edges between nodes
+        """
+        tools = get_tools()
+        tool_node = create_tool_node(tools)
+
+        llm = self.llm
+
+        chatbot_with_tool_node = ChatbotWithToolNode(llm).create_chatbot_with_tools(tools)
+        self.graph_builder.add_node("chatbot",chatbot_with_tool_node)
+        self.graph_builder.add_node("tools",tool_node)
+
+        self.graph_builder.add_edge(START, "chatbot")
+        self.graph_builder.add_conditional_edges("chatbot",tools_condition)
+        self.graph_builder.add_edge("tools","chatbot")
+        self.graph_builder.add_edge("chatbot",END)
+
+
+
     def setup_graph(self, usecase:str):
         logger.info("sets up the graph for selected use case.")
         """
@@ -30,5 +56,7 @@ class GraphBuilder:
         """
         if usecase == "Chatbot":
             self.basic_chatbot_build_graph()
+        elif usecase == "Agent":
+            self.chatbot_with_websearch_build_graph()
         
         return self.graph_builder.compile()
